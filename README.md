@@ -62,27 +62,30 @@ Create a folder named exactly `resumes` inside the project root (it is git-ignor
 
 ```
 job-applier/
-├── resumes/                        ← create this folder
-│   ├── YourName_SF_Dev.pdf         ← Salesforce Developer resume
-│   ├── YourName_SF_Admin.pdf       ← Salesforce Admin resume
-│   └── YourName_AgentForce.pdf     ← Agentforce Developer resume
+├── resumes/                  ← create this folder
+│   ├── Resume1.pdf           ← your primary / most used resume
+│   ├── Resume2.pdf           ← resume for a second role type
+│   ├── Resume3.pdf           ← resume for a third role type (optional)
+│   └── Resume4.pdf           ← resume for a fourth role type (optional)
 ├── app.py
 ├── config.py
 └── ...
 ```
 
-Then open `config.py` and update the `RESUMES` dictionary to match your exact file names:
+You can name the PDF files anything you want — just make sure the names match what you put in `config.py`.
+
+Then open `config.py` and update the `RESUMES` dictionary to map each job role to a resume file:
 
 ```python
 RESUMES = {
-    "Salesforce Developer":        "resumes/YourName_SF_Dev.pdf",
-    "Salesforce Admin":            "resumes/YourName_SF_Admin.pdf",
-    "Salesforce Business Analyst": "resumes/YourName_SF_Dev.pdf",  # AI transforms this to BA tone automatically
-    "Agentforce Developer":        "resumes/YourName_AgentForce.pdf",
+    "Role 1":  "resumes/Resume1.pdf",   # e.g. Software Engineer
+    "Role 2":  "resumes/Resume2.pdf",   # e.g. Data Analyst
+    "Role 3":  "resumes/Resume1.pdf",   # can reuse the same resume for similar roles
+    "Role 4":  "resumes/Resume3.pdf",   # e.g. Product Manager
 }
 ```
 
-> **Note:** Business Analyst roles reuse your Developer resume — the AI automatically rewrites the tone and bullets to match a BA profile. No separate BA resume needed.
+> **Tip:** You don't need a separate resume for every role. If two roles are similar, point them to the same file — the AI will automatically tailor the content (summary, bullets, skills) for each specific job description it finds.
 
 ### 5. Update your personal info in `config.py`
 
