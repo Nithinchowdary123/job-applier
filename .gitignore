@@ -1,0 +1,34 @@
+# Credentials — never commit
+.env
+
+# Personal resumes
+resumes/
+output_resumes/
+
+# Job application database
+job_tracker.db
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code
+.claude/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log

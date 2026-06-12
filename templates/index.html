@@ -1,0 +1,381 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.4">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en" data-theme="dark"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1">&lt;title&gt;Job Bot — Sree Nithin&lt;/title&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">:root {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--bg:#080810; --surface:#0f0f1a; --surface2:#161625;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--border:#1e1e35; --border2:#2a2a45; --text:#e2e2f0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--muted:#6b6b90; --accent:#7c6bff; --accent2:#a78bfa;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--green:#34d399; --orange:#fb923c; --red:#f87171;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--blue:#60a5fa; --glow:rgba(124,107,255,0.15);</p>
+<p class="p1">}</p>
+<p class="p1">[data-theme="light"] {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--bg:#f0eff8; --surface:#ffffff; --surface2:#f5f4fc;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--border:#e0dff0; --border2:#cccce0; --text:#12122a;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--muted:#7070a0; --glow:rgba(124,107,255,0.08);</p>
+<p class="p1">}</p>
+<p class="p1">*{margin:0;padding:0;box-sizing:border-box;}</p>
+<p class="p1">body{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-family:'DM Sans',sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--bg); color:var(--text); min-height:100vh;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background-image:</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(ellipse at 20% 0%,rgba(124,107,255,0.06) 0%,transparent 60%),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(ellipse at 80% 100%,rgba(251,146,60,0.04) 0%,transparent 60%);</p>
+<p class="p1">}</p>
+<p class="p1">header{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:rgba(15,15,26,0.85); backdrop-filter:blur(20px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-bottom:1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding:0 32px; height:64px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:flex; align-items:center; justify-content:space-between;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position:sticky; top:0; z-index:100;</p>
+<p class="p1">}</p>
+<p class="p1">[data-theme="light"] header{background:rgba(255,255,255,0.85);}</p>
+<p class="p1">.logo{display:flex;align-items:center;gap:12px;}</p>
+<p class="p1">.logo-mark{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width:36px;height:36px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:linear-gradient(135deg,var(--accent),var(--accent2));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius:10px; display:flex; align-items:center; justify-content:center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size:18px; box-shadow:0 0 20px var(--glow);</p>
+<p class="p1">}</p>
+<p class="p1">.logo-text h1{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;}</p>
+<p class="p1">.logo-text p{font-size:11px;color:var(--muted);margin-top:1px;}</p>
+<p class="p1">.hcontrols{display:flex;align-items:center;gap:12px;}</p>
+<p class="p1">.ai-pill{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:flex;align-items:center;gap:8px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--surface2); border:1px solid var(--border2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius:24px; padding:6px 14px 6px 10px; font-size:12px;</p>
+<p class="p1">}</p>
+<p class="p1">.ai-pill-lbl{color:var(--muted);font-size:11px;}</p>
+<p class="p1">.switch{position:relative;width:36px;height:20px;cursor:pointer;}</p>
+<p class="p1">.switch input{opacity:0;width:0;height:0;position:absolute;}</p>
+<p class="p1">.slider{position:absolute;inset:0;background:var(--border2);border-radius:20px;transition:.25s;}</p>
+<p class="p1">.slider:before{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content:"";position:absolute;width:14px;height:14px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>left:3px;bottom:3px;background:white;border-radius:50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition:.25s;box-shadow:0 1px 4px rgba(0,0,0,.3);</p>
+<p class="p1">}</p>
+<p class="p1">input:checked+.slider{background:var(--accent);}</p>
+<p class="p1">input:checked+.slider:before{transform:translateX(16px);}</p>
+<p class="p1">.ai-mode-text{font-weight:600;font-size:12px;min-width:52px;}</p>
+<p class="p1">.theme-btn{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width:36px;height:36px; background:var(--surface2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border:1px solid var(--border2); border-radius:10px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>cursor:pointer; display:flex; align-items:center; justify-content:center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size:16px; color:var(--text); transition:border-color .2s;</p>
+<p class="p1">}</p>
+<p class="p1">.theme-btn:hover{border-color:var(--accent);}</p>
+<p class="p1">.main{padding:28px 32px;max-width:1440px;margin:0 auto;}</p>
+<p class="p1">.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}</p>
+<p class="p1">.stat{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--surface); border:1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius:16px; padding:18px 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:flex;align-items:center;gap:14px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position:relative;overflow:hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>animation:fadeIn .4s ease both;</p>
+<p class="p1">}</p>
+<p class="p1">.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;}</p>
+<p class="p1">.stat.g::before{background:var(--green);}</p>
+<p class="p1">.stat.o::before{background:var(--orange);}</p>
+<p class="p1">.stat.r::before{background:var(--red);}</p>
+<p class="p1">.stat.b::before{background:var(--blue);}</p>
+<p class="p1">.stat-ico{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}</p>
+<p class="p1">.stat.g .stat-ico{background:rgba(52,211,153,.12);}</p>
+<p class="p1">.stat.o .stat-ico{background:rgba(251,146,60,.12);}</p>
+<p class="p1">.stat.r .stat-ico{background:rgba(248,113,113,.12);}</p>
+<p class="p1">.stat.b .stat-ico{background:rgba(96,165,250,.12);}</p>
+<p class="p1">.stat-val{font-family:'Space Mono',monospace;font-size:26px;font-weight:700;line-height:1;}</p>
+<p class="p1">.stat-lbl{font-size:11px;color:var(--muted);margin-top:4px;}</p>
+<p class="p1">.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}</p>
+<p class="p1">.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;animation:fadeIn .4s ease both;}</p>
+<p class="p1">.card-head{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}</p>
+<p class="p1">.card-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;}</p>
+<p class="p1">.card-body{padding:18px 20px;}</p>
+<p class="p1">.status-row{display:flex;align-items:center;gap:8px;}</p>
+<p class="p1">.sdot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0;}</p>
+<p class="p1">.sdot.running{background:var(--green);animation:blink 1.2s infinite;}</p>
+<p class="p1">@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}</p>
+<p class="p1">.stxt{font-size:12px;color:var(--muted);font-family:'Space Mono',monospace;}</p>
+<p class="p1">.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}</p>
+<p class="p1">.btn{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding:13px 16px; border-radius:12px; border:none; cursor:pointer;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:flex;align-items:center;justify-content:center;gap:7px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition:all .2s; position:relative; overflow:hidden;</p>
+<p class="p1">}</p>
+<p class="p1">.btn:hover{transform:translateY(-1px);opacity:.9;}</p>
+<p class="p1">.btn:active{transform:translateY(0);}</p>
+<p class="p1">.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}</p>
+<p class="p1">.btn-li{background:#0a66c2;color:white;}</p>
+<p class="p1">.btn-di{background:#f97316;color:white;}</p>
+<p class="p1">.btn-both{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;grid-column:1/-1;}</p>
+<p class="p1">.btn-stop{background:var(--red);color:white;grid-column:1/-1;}</p>
+<p class="p1">.log-wrap{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:#06060e; border-radius:10px; padding:14px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>height:290px; overflow-y:auto;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-family:'Space Mono',monospace; font-size:11px; line-height:1.8;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>scrollbar-width:thin; scrollbar-color:var(--border2) transparent;</p>
+<p class="p1">}</p>
+<p class="p1">[data-theme="light"] .log-wrap{background:#0f0f1a;}</p>
+<p class="p1">.log-wrap::-webkit-scrollbar{width:4px;}</p>
+<p class="p1">.log-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}</p>
+<p class="p1">.ll{color:#5a5a7a;}</p>
+<p class="p1">.ll.s{color:#34d399;} .ll.e{color:#f87171;}</p>
+<p class="p1">.ll.k{color:#4a4a6a;} .ll.a{color:#a78bfa;} .ll.i{color:#60a5fa;}</p>
+<p class="p1">.log-clear{background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;}</p>
+<p class="p1">.log-clear:hover{color:var(--text);}</p>
+<p class="p1">.resume-grid{display:flex;flex-direction:column;gap:8px;}</p>
+<p class="p1">.resume-row{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:flex;align-items:center;gap:12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--surface2); border:1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius:10px; padding:11px 14px;</p>
+<p class="p1">}</p>
+<p class="p1">.rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}</p>
+<p class="p1">.resume-role{font-size:12px;font-weight:600;}</p>
+<p class="p1">.resume-file{font-size:10px;color:var(--muted);margin-top:1px;font-family:'Space Mono',monospace;}</p>
+<p class="p1">.tracker-scroll{overflow:auto;max-height:320px;}</p>
+<p class="p1">table{width:100%;border-collapse:collapse;font-size:11px;}</p>
+<p class="p1">th{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding:10px 14px;text-align:left;color:var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-bottom:1px solid var(--border);white-space:nowrap;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position:sticky;top:0;background:var(--surface);</p>
+<p class="p1">}</p>
+<p class="p1">td{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding:10px 14px;border-bottom:1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color:var(--text);white-space:nowrap;max-width:180px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>overflow:hidden;text-overflow:ellipsis;</p>
+<p class="p1">}</p>
+<p class="p1">tr:last-child td{border-bottom:none;}</p>
+<p class="p1">tr:hover td{background:var(--surface2);}</p>
+<p class="p1">.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;font-family:'Space Mono',monospace;}</p>
+<p class="p1">.pill-applied{background:rgba(52,211,153,.12);color:var(--green);}</p>
+<p class="p1">.pill-interview{background:rgba(96,165,250,.12);color:var(--blue);}</p>
+<p class="p1">.pill-rejected{background:rgba(248,113,113,.12);color:var(--red);}</p>
+<p class="p1">.tlink{color:var(--accent);text-decoration:none;font-size:10px;}</p>
+<p class="p1">.tlink:hover{text-decoration:underline;}</p>
+<p class="p1">.empty-state{padding:32px;text-align:center;color:var(--muted);font-size:12px;}</p>
+<p class="p1">.refresh-btn{background:none;border:none;color:var(--accent);cursor:pointer;font-size:11px;font-family:'DM Sans',sans-serif;font-weight:500;}</p>
+<p class="p1">@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}</p>
+<p class="p1">.stat:nth-child(1){animation-delay:.05s}</p>
+<p class="p1">.stat:nth-child(2){animation-delay:.1s}</p>
+<p class="p1">.stat:nth-child(3){animation-delay:.15s}</p>
+<p class="p1">.stat:nth-child(4){animation-delay:.2s}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;header&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="logo"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo-mark"&gt;🤖&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo-text"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1&gt;JOB_BOT&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;Sree Nithin M · Salesforce Roles&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="hcontrols"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="ai-pill"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="ai-pill-lbl"&gt;AI MODE&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label class="switch"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="checkbox" id="aiToggle" onchange="toggleAI(this)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="slider"&gt;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="ai-mode-text" id="aiModeText"&gt;Free&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="theme-btn" onclick="toggleTheme()"&gt;&lt;span id="themeIco"&gt;☀️&lt;/span&gt;&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="main"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="stats-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat g"&gt;&lt;div class="stat-ico"&gt;✅&lt;/div&gt;&lt;div&gt;&lt;div class="stat-val" id="sApplied"&gt;0&lt;/div&gt;&lt;div class="stat-lbl"&gt;Applied this run&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat o"&gt;&lt;div class="stat-ico"&gt;⏭️&lt;/div&gt;&lt;div&gt;&lt;div class="stat-val" id="sSkipped"&gt;0&lt;/div&gt;&lt;div class="stat-lbl"&gt;Skipped&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat r"&gt;&lt;div class="stat-ico"&gt;❌&lt;/div&gt;&lt;div&gt;&lt;div class="stat-val" id="sErrors"&gt;0&lt;/div&gt;&lt;div class="stat-lbl"&gt;Errors&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="stat b"&gt;&lt;div class="stat-ico"&gt;📊&lt;/div&gt;&lt;div&gt;&lt;div class="stat-val" id="sTotal"&gt;0&lt;/div&gt;&lt;div class="stat-lbl"&gt;Total logged&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-head"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-title"&gt;🎮 Bot Controls&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="status-row"&gt;&lt;div class="sdot" id="sdot"&gt;&lt;/div&gt;&lt;span class="stxt" id="stxt"&gt;IDLE&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-body"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="btn-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn btn-li" id="btnLI" onclick="runBot('linkedin')"&gt;🔵 LinkedIn&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn btn-di" id="btnDI" onclick="runBot('dice')"&gt;🟠 Dice&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn btn-both" id="btnBoth" onclick="runBot('both')"&gt;🚀 Run Both Platforms&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn btn-stop" id="btnStop" onclick="stopBot()" disabled&gt;⏹ Stop Bot&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-head"&gt;&lt;div class="card-title"&gt;📄 Resume Mapping&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-body"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="resume-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="resume-row"&gt;&lt;div class="rdot" style="background:#60a5fa"&gt;&lt;/div&gt;&lt;div&gt;&lt;div class="resume-role"&gt;Salesforce Developer&lt;/div&gt;&lt;div class="resume-file"&gt;Sree NithinSF Dev.pdf&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="resume-row"&gt;&lt;div class="rdot" style="background:#34d399"&gt;&lt;/div&gt;&lt;div&gt;&lt;div class="resume-role"&gt;Salesforce Admin&lt;/div&gt;&lt;div class="resume-file"&gt;SreeNithin SF Admin.pdf&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="resume-row"&gt;&lt;div class="rdot" style="background:#fb923c"&gt;&lt;/div&gt;&lt;div&gt;&lt;div class="resume-role"&gt;Salesforce Business Analyst&lt;/div&gt;&lt;div class="resume-file"&gt;Sree NithinSF Dev.pdf · AI transformed&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="resume-row"&gt;&lt;div class="rdot" style="background:#a78bfa"&gt;&lt;/div&gt;&lt;div&gt;&lt;div class="resume-role"&gt;Agentforce Developer&lt;/div&gt;&lt;div class="resume-file"&gt;SreeNithin Dev AgentForce.pdf&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-head"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-title"&gt;📟 Live Logs&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="log-clear" onclick="clearLogs()"&gt;clear&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-body" style="padding:12px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="log-wrap" id="logBox"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="ll i"&gt;// bot ready — press a button to start&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card-head"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-title"&gt;📊 Recent Applications&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="refresh-btn" onclick="loadTracker()"&gt;↻ refresh&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tracker-scroll"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;table&gt;&lt;thead id="tHead"&gt;&lt;/thead&gt;&lt;tbody id="tBody"&gt;&lt;tr&gt;&lt;td colspan="6" class="empty-state"&gt;Loading...&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">const socket=io();</p>
+<p class="p1">let applied=0,skipped=0,errors=0,total=0;</p>
+<p class="p2"><br></p>
+<p class="p1">fetch('/ai_mode').then(r=&gt;r.json()).then(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tog=document.getElementById('aiToggle');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const txt=document.getElementById('aiModeText');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(d.mode==='premium'){tog.checked=true;txt.textContent='Premium';txt.style.color='#a78bfa';}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else{txt.textContent='Free';txt.style.color='#34d399';}</p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">function toggleAI(el){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const mode=el.checked?'premium':'free';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const txt=document.getElementById('aiModeText');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fetch('/ai_mode',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mode})})</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.then(r=&gt;r.json()).then(()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>txt.textContent=mode==='premium'?'Premium':'Free';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>txt.style.color=mode==='premium'?'#a78bfa':'#34d399';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>addLog(`⚡ AI mode → ${mode.toUpperCase()}`,'i');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function toggleTheme(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const html=document.documentElement;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dark=html.getAttribute('data-theme')==='dark';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>html.setAttribute('data-theme',dark?'light':'dark');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('themeIco').textContent=dark?'🌙':'☀️';</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function setRunning(on,platform=''){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dot=document.getElementById('sdot');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const txt=document.getElementById('stxt');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const btns=['btnLI','btnDI','btnBoth'];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(on){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>dot.className='sdot running';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>txt.textContent=`RUNNING ${platform.toUpperCase()}`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btns.forEach(b=&gt;document.getElementById(b).disabled=true);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('btnStop').disabled=false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>dot.className='sdot';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>txt.textContent='IDLE';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btns.forEach(b=&gt;document.getElementById(b).disabled=false);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('btnStop').disabled=true;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function runBot(platform){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>applied=0;skipped=0;errors=0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updateStats();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setRunning(true,platform);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>addLog(`🚀 Starting ${platform} bot...`,'i');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fetch(`/run/${platform}`,{method:'POST'}).then(r=&gt;r.json()).then(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(d.status==='already_running'){addLog('⚠️ Bot already running!','e');setRunning(false);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function stopBot(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fetch('/stop',{method:'POST'});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>addLog('⏹ Stop requested...','e');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setRunning(false);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function updateStats(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sApplied').textContent=applied;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sSkipped').textContent=skipped;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sErrors').textContent=errors;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sTotal').textContent=total;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function addLog(msg,type=''){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const box=document.getElementById('logBox');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const div=document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let cls='ll';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(msg.includes('✅')||msg.includes('Applied!')||msg.includes('Logged'))cls='ll s';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else if(msg.includes('❌')||msg.includes('Error'))cls='ll e';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else if(msg.includes('⏭️')||msg.includes('🚫')||msg.includes('skipping')||msg.includes('Not in'))cls='ll k';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else if(msg.includes('💼')||msg.includes('Applying'))cls='ll a';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else if(type==='i'||msg.includes('🔍')||msg.includes('🚀')||msg.includes('Starting'))cls='ll i';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>div.className=cls;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const t=new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>div.textContent=`[${t}] ${msg}`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box.scrollTop=box.scrollHeight;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(msg.includes('Applied!')){applied++;total++;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(msg.includes('skipping')||msg.includes('Not in')||msg.includes('🚫'))skipped++;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(msg.includes('❌ Error'))errors++;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updateStats();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function clearLogs(){document.getElementById('logBox').innerHTML='&lt;div class="ll i"&gt;// logs cleared&lt;/div&gt;';}</p>
+<p class="p2"><br></p>
+<p class="p1">socket.on('log',d=&gt;addLog(d.msg));</p>
+<p class="p1">socket.on('done',d=&gt;{setRunning(false);addLog(`🎉 Done! Applied: ${d.stats.applied}`,'s');loadTracker();});</p>
+<p class="p2"><br></p>
+<p class="p1">function loadTracker(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fetch('/tracker').then(r=&gt;r.json()).then(d=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const head=document.getElementById('tHead');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const body=document.getElementById('tBody');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(d.error){body.innerHTML=`&lt;tr&gt;&lt;td colspan="6" class="empty-state"&gt;${d.error}&lt;/td&gt;&lt;/tr&gt;`;return;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!d.rows||!d.rows.length){body.innerHTML='&lt;tr&gt;&lt;td colspan="6" class="empty-state"&gt;No applications yet&lt;/td&gt;&lt;/tr&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>head.innerHTML='&lt;tr&gt;'+d.cols.map(c=&gt;`&lt;th&gt;${c}&lt;/th&gt;`).join('')+'&lt;/tr&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body.innerHTML=d.rows.slice().reverse().map(row=&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>'&lt;tr&gt;'+row.map((cell,i)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(d.cols[i]==='Status'){const cls=cell==='Applied'?'pill-applied':cell==='Interview'?'pill-interview':'pill-rejected';return `&lt;td&gt;&lt;span class="pill ${cls}"&gt;${cell||'-'}&lt;/span&gt;&lt;/td&gt;`;}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(d.cols[i]==='Link'&amp;&amp;cell)return `&lt;td&gt;&lt;a class="tlink" href="${cell}" target="_blank"&gt;↗ view&lt;/a&gt;&lt;/td&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return `&lt;td title="${cell}"&gt;${cell||'-'}&lt;/td&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}).join('')+'&lt;/tr&gt;'</p>
+<p class="p1"><span class="Apple-converted-space">    </span>).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p1">loadTracker();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
