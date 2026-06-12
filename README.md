@@ -57,13 +57,49 @@ cp .env.example .env
 Fill in your `.env` with your LinkedIn, Dice, and Anthropic API credentials.
 
 ### 4. Add your resumes
-Place your resume PDFs in the `resumes/` folder:
+
+Create a folder named exactly `resumes` inside the project root (it is git-ignored so your personal files stay private):
+
 ```
-resumes/
-  Sree NithinSF Dev.pdf         # Salesforce Developer
-  SreeNithin SF Admin.pdf       # Salesforce Admin
-  SreeNithin Dev AgentForce.pdf # Agentforce Developer
+job-applier/
+├── resumes/                        ← create this folder
+│   ├── YourName_SF_Dev.pdf         ← Salesforce Developer resume
+│   ├── YourName_SF_Admin.pdf       ← Salesforce Admin resume
+│   └── YourName_AgentForce.pdf     ← Agentforce Developer resume
+├── app.py
+├── config.py
+└── ...
 ```
+
+Then open `config.py` and update the `RESUMES` dictionary to match your exact file names:
+
+```python
+RESUMES = {
+    "Salesforce Developer":        "resumes/YourName_SF_Dev.pdf",
+    "Salesforce Admin":            "resumes/YourName_SF_Admin.pdf",
+    "Salesforce Business Analyst": "resumes/YourName_SF_Dev.pdf",  # AI transforms this to BA tone automatically
+    "Agentforce Developer":        "resumes/YourName_AgentForce.pdf",
+}
+```
+
+> **Note:** Business Analyst roles reuse your Developer resume — the AI automatically rewrites the tone and bullets to match a BA profile. No separate BA resume needed.
+
+### 5. Update your personal info in `config.py`
+
+Open `config.py` and fill in your details at the top:
+
+```python
+FIRST_NAME = "Your First Name"
+LAST_NAME  = "Your Last Name"
+EMAIL      = "your_email@example.com"
+PHONE      = "123-456-7890"
+CITY       = "Your City"
+STATE      = "Your State"
+ZIP        = "00000"
+CITY_STATE = "Your City, Your State"
+```
+
+This is what the bot uses to auto-fill name, phone, email, and location fields on every application form.
 
 ### 5. Run
 
